@@ -1,122 +1,122 @@
-package;
+paquete;
 
-#if desktop
-import Discord.DiscordClient;
-#end
-import Section.SwagSection;
-import Song.SwagSong;
-import WiggleEffect.WiggleEffectType;
-import flixel.FlxBasic;
-import flixel.FlxCamera;
-import flixel.FlxG;
-import flixel.FlxGame;
-import flixel.FlxObject;
-import flixel.FlxSprite;
-import flixel.FlxState;
-import flixel.FlxSubState;
-import flixel.addons.display.FlxGridOverlay;
-import flixel.addons.effects.FlxTrail;
-import flixel.addons.effects.FlxTrailArea;
-import flixel.addons.effects.chainable.FlxEffectSprite;
-import flixel.addons.effects.chainable.FlxWaveEffect;
-import flixel.addons.transition.FlxTransitionableState;
-import flixel.graphics.atlas.FlxAtlas;
-import flixel.graphics.frames.FlxAtlasFrames;
-import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.math.FlxMath;
-import flixel.math.FlxPoint;
-import flixel.math.FlxRect;
-import flixel.system.FlxSound;
-import flixel.text.FlxText;
-import flixel.tweens.FlxEase;
-import flixel.tweens.FlxTween;
-import flixel.ui.FlxBar;
-import flixel.util.FlxCollision;
-import flixel.util.FlxColor;
-import flixel.util.FlxSort;
-import flixel.util.FlxStringUtil;
-import flixel.util.FlxTimer;
-import haxe.Json;
-import lime.utils.Assets;
-import openfl.display.BlendMode;
-import openfl.display.StageQuality;
-import openfl.filters.ShaderFilter;
-import openfl.utils.Assets as OpenFlAssets;
-import editors.ChartingState;
-import editors.CharacterEditorState;
-import flixel.group.FlxSpriteGroup;
-import Achievements;
-import StageData;
-import FunkinLua;
-import DialogueBoxPsych;
+#si escritorio
+importar Discord.DiscordClient;
+#fin
+importar Sección.SwagSection;
+importar Canción.SwagSong;
+importar WiggleEffect.WiggleEffectType;
+importar flixel.FlxBasic;
+importar flixel.FlxCamera;
+importar flixel.FlxG;
+importar flixel.FlxGame;
+importar flixel.FlxObject;
+importar flixel.FlxSprite;
+importar flixel.FlxState;
+importar flixel.FlxSubState;
+importar flixel.addons.display.FlxGridOverlay;
+importar flixel.addons.effects.FlxTrail;
+importar flixel.addons.effects.FlxTrailArea;
+importar flixel.addons.effects.chainable.FlxEffectSprite;
+importar flixel.addons.effects.chainable.FlxWaveEffect;
+importar flixel.addons.transition.FlxTransitionableState;
+importar flixel.graphics.atlas.FlxAtlas;
+importar flixel.graphics.frames.FlxAtlasFrames;
+importar flixel.group.FlxGroup.FlxTypedGroup;
+importar flixel.math.FlxMath;
+importar flixel.math.FlxPoint;
+importar flixel.math.FlxRect;
+importar flixel.system.FlxSound;
+importar flixel.text.FlxText;
+importar flixel.tweens.FlxEase;
+importar flixel.tweens.FlxTween;
+importar flixel.ui.FlxBar;
+importar flixel.util.FlxCollision;
+importar flixel.util.FlxColor;
+importar flixel.util.FlxSort;
+importar flixel.util.FlxStringUtil;
+importar flixel.util.FlxTimer;
+importar haxe.Json;
+importar cal.utils.Activos;
+importar openfl.display.BlendMode;
+importar openfl.display.StageQuality;
+importar openfl.filters.ShaderFilter;
+importar openfl.utils.Assets como OpenFlAssets;
+importar editores.ChartingState;
+importar editores.CharacterEditorState;
+importar flixel.group.FlxSpriteGroup;
+importar Logros;
+importar StageData;
+importar FunkinLua;
+importar DialogueBoxPsych;
 
-#if sys
-import Sys;
-import sys.FileSystem;
-import openfl.Assets;
-import sys.io.File;
-#end
+#si el sistema
+importar sistema;
+importar sys.FileSystem;
+importar activos abiertos;
+importar sys.io.File;
+#fin
 
-#if mobileC
-import ui.Mobilecontrols;
-#end
+#si móvilC
+importar ui.Mobilecontrols;
+#fin
 
-using StringTools;
+utilizando StringTools;
 
-class PlayState extends MusicBeatState
+clase PlayState extiende MusicBeatState
 {
-	public static var STRUM_X = 42;
-	public static var STRUM_X_MIDDLESCROLL = -278;
+	variable estática pública STRUM_X = 42;
+	variable estática pública STRUM_X_MIDDLESCROLL = -278;
 
 	public static var ratingStuff:Array<Dynamic> = [
-		['You Suck!', 0.2], //From 0% to 19%
-		['Shit', 0.4], //From 20% to 39%
-		['Bad', 0.5], //From 40% to 49%
-		['Bruh', 0.6], //From 50% to 59%
-		['Meh', 0.69], //From 60% to 68%
-		['Nice', 0.7], //69%
-		['Good', 0.8], //From 70% to 79%
-		['Great', 0.9], //From 80% to 89%
-		['Sick!', 1], //From 90% to 99%
-		['Perfect!!', 1] //The value on this one isn't used actually, since Perfect is always "1"
+		['¡Apestas!', 0.2], //Del 0% al 19%
+		['Mierda', 0.4], //Del 20% al 39%
+		['Malo', 0.5], //Del 40% al 49%
+		['Bruh', 0.6], //Del 50% al 59%
+		['Meh', 0.69], //Del 60% al 68%
+		['Agradable', 0.7], //69%
+		['Bien', 0.8], //Del 70% al 79%
+		['Genial', 0.9], //Del 80% al 89%
+		['¡Enfermo!', 1], //Del 90% al 99%
+		['¡¡Perfecto!!', 1] //El valor de este no se usa en realidad, ya que Perfecto siempre es "1"
 	];
 	
-	#if (haxe >= "4.0.0")
+	#si (hax >= "4.0.0")
 	public var modchartTweens:Map<String, FlxTween> = new Map();
 	public var modchartSprites:Map<String, ModchartSprite> = new Map();
 	public var modchartTimers:Map<String, FlxTimer> = new Map();
 	public var modchartSounds:Map<String, FlxSound> = new Map();
-	#else
+	#demás
 	public var modchartTweens:Map<String, FlxTween> = new Map<String, FlxTween>();
 	public var modchartSprites:Map<String, ModchartSprite> = new Map<String, Dynamic>();
 	public var modchartTimers:Map<String, FlxTimer> = new Map<String, FlxTimer>();
 	public var modchartSounds:Map<String, FlxSound> = new Map<String, FlxSound>();
-	#end
+	#fin
 
-	//event variables
-	private var isCameraOnForcedPos:Bool = false;
-	#if (haxe >= "4.0.0")
-	public var boyfriendMap:Map<String, Boyfriend> = new Map();
+	//variables de evento
+	var privada isCameraOnForcedPos:Bool = false;
+	#si (hax >= "4.0.0")
+	public var novioMapa:Mapa<String, Novio> = nuevo Mapa();
 	public var dadMap:Map<String, Character> = new Map();
 	public var gfMap:Map<String, Character> = new Map();
-	#else
-	public var boyfriendMap:Map<String, Boyfriend> = new Map<String, Boyfriend>();
+	#demás
+	public var novioMap:Map<String, Boyfriend> = new Map<String, Boyfriend>();
 	public var dadMap:Map<String, Character> = new Map<String, Character>();
 	public var gfMap:Map<String, Character> = new Map<String, Character>();
-	#end
+	#fin
 
-	public var BF_X:Float = 770;
-	public var BF_Y:Float = 100;
-	public var DAD_X:Float = 100;
-	public var DAD_Y:Float = 100;
-	public var GF_X:Float = 400;
-	public var GF_Y:Float = 130;
+	pública var BF_X:Flotante = 770;
+	public var BF_Y:Flotante = 100;
+	public var DAD_X: Flotante = 100;
+	public var DAD_Y: Flotante = 100;
+	public var GF_X:Flotante = 400;
+	var pública GF_Y:Flotante = 130;
 	
 	public static var songSpeed:Float = 0;
 	
-	public var boyfriendGroup:FlxSpriteGroup;
-	public var dadGroup:FlxSpriteGroup;
-	public var gfGroup:FlxSpriteGroup;
+	public var novioGroup:FlxSpriteGroup;
+	público var dadGroup:FlxSpriteGroup;
+	público var gfGroup:FlxSpriteGroup;
 
 	public static var curStage:String = '';
 	public static var isPixelStage:Bool = false;
@@ -126,27 +126,27 @@ class PlayState extends MusicBeatState
 	public static var storyPlaylist:Array<String> = [];
 	public static var storyDifficulty:Int = 1;
 
-	public var vocals:FlxSound;
+	voces públicas de var: FlxSound;
 
-	public var dad:Character;
-	public var gf:Character;
-	public var boyfriend:Boyfriend;
+	public var dad:Carácter;
+	público var gf:Carácter;
+	público var novio:Novio;
 
-	public var notes:FlxTypedGroup<Note>;
-	public var unspawnNotes:Array<Note> = [];
+	public var notes:FlxTypedGroup<Nota>;
+	public var unspawnNotes:Array<Nota> = [];
 	public var eventNotes:Array<Dynamic> = [];
 
-	private var strumLine:FlxSprite;
+	privado var strumLine:FlxSprite;
 
-	//Handles the new epic mega sexy cam code that i've done
-	private var camFollow:FlxPoint;
-	private var camFollowPos:FlxObject;
-	private static var prevCamFollow:FlxPoint;
-	private static var prevCamFollowPos:FlxObject;
-	private static var resetSpriteCache:Bool = false;
+	// Maneja el nuevo código de cámara épica mega sexy que he hecho
+	privado var camSeguir:FlxPoint;
+	privado var camFollowPos:FlxObject;
+	var estática privada prevCamFollow:FlxPoint;
+	var estática privada prevCamFollowPos:FlxObject;
+	var estática privada resetSpriteCache:Bool = false;
 
 	public var strumLineNotes:FlxTypedGroup<StrumNote>;
-	public var opponentStrums:FlxTypedGroup<StrumNote>;
+	público var oponenteStrums:FlxTypedGroup<StrumNote>;
 	public var playerStrums:FlxTypedGroup<StrumNote>;
 	public var grpNoteSplashes:FlxTypedGroup<NoteSplash>;
 
@@ -154,49 +154,49 @@ class PlayState extends MusicBeatState
 	private var curSong:String = "";
 
 	public var gfSpeed:Int = 1;
-	public var health:Float = 1;
-	public var combo:Int = 0;
+	salud pública de var: Flotante = 1;
+	combinación de var pública: Int = 0;
 
-	private var healthBarBG:AttachedSprite;
-	public var healthBar:FlxBar;
-	var songPercent:Float = 0;
+	var privada healthBarBG:AttachedSprite;
+	public var saludBar:FlxBar;
+	var porcentajecanción:Flotante = 0;
 
-	private var timeBarBG:AttachedSprite;
+	privado var timeBarBG:AttachedSprite;
 	public var timeBar:FlxBar;
 
-	private var generatedMusic:Bool = false;
+	var privado generadoMúsica:Bool = false;
 	public var endingSong:Bool = false;
-	private var startingSong:Bool = false;
-	private var updateTime:Bool = false;
-	public static var practiceMode:Bool = false;
+	private var canción inicial:Bool = false;
+	tiempo de actualización de var privado: Bool = falso;
+	public static var PracticeMode:Bool = false;
 	public static var usedPractice:Bool = false;
-	public static var changedDifficulty:Bool = false;
+	public static var changeDifficulty:Bool = false;
 	public static var cpuControlled:Bool = false;
 	var runCutscene:Bool = false;
 
-	var botplaySine:Float = 0;
+	var botplaySine:Flotante = 0;
 	var botplayTxt:FlxText;
 
 	public var iconP1:HealthIcon;
 	public var iconP2:HealthIcon;
 	public var camHUD:FlxCamera;
-	public var camGame:FlxCamera;
-	public var camOther:FlxCamera;
+	público var camGame:FlxCamera;
+	public var camOtro:FlxCamera;
 	public var cameraSpeed:Float = 1;
 
-	var dialogue:Array<String> = ['blah blah blah', 'coolswag'];
-	var dialogueJson:DialogueFile = null;
+	var dialog:Array<String> = ['bla, bla, bla', 'coolswag'];
+	var dialogJson:DialogueFile = null;
 
 	var halloweenBG:BGSprite;
-	var halloweenWhite:BGSprite;
+	var halloweenBlanco:BGSprite;
 
 	var phillyCityLights:FlxTypedGroup<BGSprite>;
 	var phillyTrain:BGSprite;
 	var blammedLightsBlack:ModchartSprite;
-	var blammedLightsBlackTween:FlxTween;
+	var culpadoLightsBlackTween:FlxTween;
 	var phillyCityLightsEvent:FlxTypedGroup<BGSprite>;
 	var phillyCityLightsEventTween:FlxTween;
-	var trainSound:FlxSound;
+	var trenSound:FlxSound;
 
 	var limoKillingState:Int = 0;
 	var limo:BGSprite;
@@ -207,149 +207,149 @@ class PlayState extends MusicBeatState
 	var bgLimo:BGSprite;
 	var grpLimoParticles:FlxTypedGroup<BGSprite>;
 	var grpLimoDancers:FlxTypedGroup<BackgroundDancer>;
-	var fastCar:BGSprite;
+	var FastCar:BGSprite;
 
 	var upperBoppers:BGSprite;
 	var bottomBoppers:BGSprite;
 	var santa:BGSprite;
-	var heyTimer:Float;
+	var heyTimer:Flotante;
 
-	var bgGirls:BackgroundGirls;
-	var wiggleShit:WiggleEffect = new WiggleEffect();
+	var bgChicas:FondoChicas;
+	var WiggleShit:WiggleEffect = new WiggleEffect();
 	var bgGhouls:BGSprite;
 
 	public var songScore:Int = 0;
-	public var songHits:Int = 0;
-	public var songMisses:Int = 0;
+	público var canciónHits:Int = 0;
+	public var canciónMisses:Int = 0;
 	public var ghostMisses:Int = 0;
-	public var scoreTxt:FlxText;
+	puntuación pública varTxt:FlxText;
 	var timeTxt:FlxText;
-	var scoreTxtTween:FlxTween;
+	var puntuaciónTxtTween:FlxTween;
 
-	public static var campaignScore:Int = 0;
-	public static var campaignMisses:Int = 0;
+	public static var CampaignScore:Int = 0;
+	public static var CampaignMisses:Int = 0;
 	public static var seenCutscene:Bool = false;
 	public static var deathCounter:Int = 0;
 
 	public var defaultCamZoom:Float = 1.05;
 
-	// how big to stretch the pixel art assets
+	// qué tan grande estirar los activos de pixel art
 	public static var daPixelZoom:Float = 6;
 
-	public var inCutscene:Bool = false;
-	var songLength:Float = 0;
+	public var enCutscene:Bool = false;
+	var duración de la canción: flotante = 0;
 
-	#if desktop
-	// Discord RPC variables
+	#si escritorio
+	// Variables de discordia RPC
 	var storyDifficultyText:String = "";
-	var detailsText:String = "";
-	var detailsPausedText:String = "";
-	#end
+	var detallesTexto:String = "";
+	var detallesPausedText:String = "";
+	#fin
 
-	#if mobileC
-	var mcontrols:Mobilecontrols; 
-	#end	
+	#si móvilC
+	var mcontrols:Controlesmóviles; 
+	#fin	
 
 	private var luaArray:Array<FunkinLua> = [];
 
-	//Achievement shit
-	var keysPressed:Array<Bool> = [false, false, false, false];
-	var boyfriendIdleTime:Float = 0.0;
-	var boyfriendIdled:Bool = false;
+	// Mierda de logro
+	var teclasPressed:Array<Bool> = [falso, falso, falso, falso];
+	var novioIdleTime: Flotante = 0.0;
+	var novioIdled:Bool = false;
 
-	// Lua shit
-	private var luaDebugGroup:FlxTypedGroup<DebugLuaText>;
+	// Mierda de Lua
+	privado var luaDebugGroup:FlxTypedGroup<DebugLuaText>;
 	public var introSoundsSuffix:String = '';
 
-	override public function create()
+	anular la función pública crear ()
 	{
-        #if MODS_ALLOWED
+        #si MODS_PERMITIDO
  		Paths.destroyLoadedImages(resetSpriteCache);
-  		#end	
-		resetSpriteCache = false;
+  		#fin	
+		resetSpriteCache = falso;
 
-		if (FlxG.sound.music != null)
-			FlxG.sound.music.stop();
+		if (FlxG.sonido.música != nulo)
+			FlxG.sonido.música.stop();
 
-		practiceMode = false;
+		modopractica = false;
 		// var gameCam:FlxCamera = FlxG.camera;
 		camGame = new FlxCamera();
 		camHUD = new FlxCamera();
 		camOther = new FlxCamera();
-		camHUD.bgColor.alpha = 0;
-		camOther.bgColor.alpha = 0;
+		camHUD.bgColor.alfa = 0;
+		camOtro.bgColor.alpha = 0;
 
 		FlxG.cameras.reset(camGame);
-		FlxG.cameras.add(camHUD);
-		FlxG.cameras.add(camOther);
+		Cámaras FlxG.add(cámaraHUD);
+		FlxG.cameras.add(camOtro);
 		grpNoteSplashes = new FlxTypedGroup<NoteSplash>();
 
 		FlxCamera.defaultCameras = [camGame];
 		CustomFadeTransition.nextCamera = camOther;
 		//FlxG.cameras.setDefaultDrawTarget(camGame, true);
 
-		persistentUpdate = true;
-		persistentDraw = true;
+		actualización persistente = verdadero;
+		dibujo persistente = verdadero;
 
-		if (SONG == null)
-			SONG = Song.loadFromJson('tutorial');
+		si (CANCIÓN == nulo)
+			CANCIÓN = Canción.loadFromJson('tutorial');
 
-		Conductor.mapBPMChanges(SONG);
-		Conductor.changeBPM(SONG.bpm);
+		Conductor.mapBPMChanges(CANCIÓN);
+		Director.cambiarBPM(CANCIÓN.bpm);
 
-		#if desktop
+		#si escritorio
 		storyDifficultyText = '' + CoolUtil.difficultyStuff[storyDifficulty][0];
 
-		// String that contains the mode defined here so it isn't necessary to call changePresence for each mode
-		if (isStoryMode)
+		// Cadena que contiene el modo definido aquí por lo que no es necesario llamar a changePresence para cada modo
+		si (esModoHistoria)
 		{
-			detailsText = "Story Mode: " + WeekData.getCurrentWeek().weekName;
+			detailsText = "Modo Historia: " + WeekData.getCurrentWeek().weekName;
 		}
-		else
+		demás
 		{
-			detailsText = "Freeplay";
+			detallesTexto = "Juego libre";
 		}
 
-		// String for when the game is paused
-		detailsPausedText = "Paused - " + detailsText;
-		#end
+		// Cadena para cuando el juego está en pausa
+		detallesPausadoTexto = "Pausado - " + detallesTexto;
+		#fin
 
 		GameOverSubstate.resetVariables();
 		var songName:String = Paths.formatToSongPath(SONG.song);
 		curStage = PlayState.SONG.stage;
-		trace('stage is: ' + curStage);
+		trace('el escenario es: ' + curStage);
 		if(PlayState.SONG.stage == null || PlayState.SONG.stage.length < 1) {
-			switch (songName)
+			cambiar (nombre de la canción)
 			{
-				case 'spookeez' | 'south' | 'monster':
-					curStage = 'spooky';
-				case 'pico' | 'blammed' | 'philly' | 'philly-nice':
-					curStage = 'philly';
-				case 'milf' | 'satin-panties' | 'high':
-					curStage = 'limo';
-				case 'cocoa' | 'eggnog':
-					curStage = 'mall';
-				case 'winter-horrorland':
+				caso 'spookeez' | 'sur' | 'monstruo':
+					curStage = 'espeluznante';
+				caso 'pico' | 'culpable' | 'filadelfia' | 'philly-agradable':
+					curStage = 'Filadelfia';
+				caso 'milf' | 'bragas de raso' | 'alto':
+					curStage = 'limusina';
+				estuche 'cacao' | 'Ponche de huevo':
+					curStage = 'centro comercial';
+				caso 'invierno-horrorland':
 					curStage = 'mallEvil';
-				case 'senpai' | 'roses':
-					curStage = 'school';
-				case 'thorns':
+				caso 'senpai' | 'rosas':
+					curStage = 'escuela';
+				caso 'espinas':
 					curStage = 'schoolEvil';
-				default:
-					curStage = 'stage';
+				defecto:
+					curStage = 'etapa';
 			}
 		}
 
 		var stageData:StageFile = StageData.getStageFile(curStage);
-		if(stageData == null) { //Stage couldn't be found, create a dummy stage for preventing a crash
-			stageData = {
-				directory: "",
-				defaultZoom: 0.9,
-				isPixelStage: false,
+		if(stageData == null) { // No se pudo encontrar el escenario, cree un escenario ficticio para evitar un bloqueo
+			datos del escenario = {
+				directorio: "",
+				zoom predeterminado: 0.9,
+				isPixelStage: falso,
 			
-				boyfriend: [770, 100],
-				girlfriend: [400, 130],
-				opponent: [100, 100]
+				novio: [770, 100],
+				novia: [400, 130],
+				oponente: [100, 100]
 			};
 		}
 
@@ -357,275 +357,275 @@ class PlayState extends MusicBeatState
 		isPixelStage = stageData.isPixelStage;
 		BF_X = stageData.boyfriend[0];
 		BF_Y = stageData.boyfriend[1];
-		GF_X = stageData.girlfriend[0];
-		GF_Y = stageData.girlfriend[1];
-		DAD_X = stageData.opponent[0];
-		DAD_Y = stageData.opponent[1];
+		GF_X = stageData.novia[0];
+		GF_Y = stageData.novia[1];
+		DAD_X = datos del escenario.oponente[0];
+		DAD_Y = datos del escenario.oponente[1];
 
-		boyfriendGroup = new FlxSpriteGroup(BF_X, BF_Y);
+		grupo de novios = new FlxSpriteGroup (BF_X, BF_Y);
 		dadGroup = new FlxSpriteGroup(DAD_X, DAD_Y);
 		gfGroup = new FlxSpriteGroup(GF_X, GF_Y);
 
-		switch (curStage)
+		cambiar (curStage)
 		{
-			case 'stage': //Week 1
+			case 'etapa': //Semana 1
 				var bg:BGSprite = new BGSprite('stageback', -600, -200, 0.9, 0.9);
-				add(bg);
+				añadir (bg);
 
 				var stageFront:BGSprite = new BGSprite('stagefront', -650, 600, 0.9, 0.9);
-				stageFront.setGraphicSize(Std.int(stageFront.width * 1.1));
-				stageFront.updateHitbox();
-				add(stageFront);
+				escenarioFront.setGraphicSize(Std.int(stageFront.width * 1.1));
+				escenarioFront.updateHitbox();
+				add(frente al escenario);
 
-				if(!ClientPrefs.lowQuality) {
+				if(!ClientPrefs.bajaCalidad) {
 					var stageLight:BGSprite = new BGSprite('stage_light', -125, -100, 0.9, 0.9);
 					stageLight.setGraphicSize(Std.int(stageLight.width * 1.1));
-					stageLight.updateHitbox();
-					add(stageLight);
+					etapaLuz.updateHitbox();
+					add(luz del escenario);
 					var stageLight:BGSprite = new BGSprite('stage_light', 1225, -100, 0.9, 0.9);
 					stageLight.setGraphicSize(Std.int(stageLight.width * 1.1));
-					stageLight.updateHitbox();
-					stageLight.flipX = true;
-					add(stageLight);
+					etapaLuz.updateHitbox();
+					etapaLuz.flipX = verdadero;
+					add(luz del escenario);
 
-					var stageCurtains:BGSprite = new BGSprite('stagecurtains', -500, -300, 1.3, 1.3);
-					stageCurtains.setGraphicSize(Std.int(stageCurtains.width * 0.9));
-					stageCurtains.updateHitbox();
-					add(stageCurtains);
+					var cortinas de escenario: BGSprite = new BGSprite ('cortinas de escenario', -500, -300, 1.3, 1.3);
+					StageCurtains.setGraphicSize(Std.int(stageCurtains.width * 0.9));
+					cortinasdelescenario.updateHitbox();
+					add(cortinas del escenario);
 				}
 
-			case 'spooky': //Week 2
-				if(!ClientPrefs.lowQuality) {
+			case 'spooky': //Semana 2
+				if(!ClientPrefs.bajaCalidad) {
 					halloweenBG = new BGSprite('halloween_bg', -200, -100, ['halloweem bg0', 'halloweem bg lightning strike']);
-				} else {
+				} demás {
 					halloweenBG = new BGSprite('halloween_bg_low', -200, -100);
 				}
-				add(halloweenBG);
+				agregar(halloweenBG);
 
 				halloweenWhite = new BGSprite(null, -FlxG.width, -FlxG.height, 0, 0);
 				halloweenWhite.makeGraphic(Std.int(FlxG.width * 3), Std.int(FlxG.height * 3), FlxColor.WHITE);
-				halloweenWhite.alpha = 0;
-				halloweenWhite.blend = ADD;
+				halloweenBlanco.alfa = 0;
+				halloweenWhite.blend = AÑADIR;
 
-				//PRECACHE SOUNDS
-				CoolUtil.precacheSound('thunder_1');
-				CoolUtil.precacheSound('thunder_2');
+				//SONIDOS DE PRECACHE
+				CoolUtil.precacheSound('trueno_1');
+				CoolUtil.precacheSound('trueno_2');
 
-			case 'philly': //Week 3
-				if(!ClientPrefs.lowQuality) {
+			case 'philly': //Semana 3
+				if(!ClientPrefs.bajaCalidad) {
 					var bg:BGSprite = new BGSprite('philly/sky', -100, 0, 0.1, 0.1);
-					add(bg);
+					añadir (bg);
 				}
 
-				var city:BGSprite = new BGSprite('philly/city', -10, 0, 0.3, 0.3);
+				var ciudad:BGSprite = new BGSprite('philly/city', -10, 0, 0.3, 0.3);
 				city.setGraphicSize(Std.int(city.width * 0.85));
-				city.updateHitbox();
-				add(city);
+				ciudad.updateHitbox();
+				agregar (ciudad);
 
 				phillyCityLights = new FlxTypedGroup<BGSprite>();
 				add(phillyCityLights);
 
-				for (i in 0...5)
+				para (yo en 0...5)
 				{
 					var light:BGSprite = new BGSprite('philly/win' + i, city.x, city.y, 0.3, 0.3);
-					light.visible = false;
+					luz.visible = falso;
 					light.setGraphicSize(Std.int(light.width * 0.85));
-					light.updateHitbox();
-					phillyCityLights.add(light);
+					luz.actualizarHitbox();
+					phillyCityLights.add(luz);
 				}
 
-				if(!ClientPrefs.lowQuality) {
+				if(!ClientPrefs.bajaCalidad) {
 					var streetBehind:BGSprite = new BGSprite('philly/behindTrain', -40, 50);
-					add(streetBehind);
+					add(calleDetrás);
 				}
 
-				phillyTrain = new BGSprite('philly/train', 2000, 360);
-				add(phillyTrain);
+				phillyTrain = new BGSprite('philly/tren', 2000, 360);
+				add(phillyTren);
 
-				trainSound = new FlxSound().loadEmbedded(Paths.sound('train_passes'));
-				CoolUtil.precacheSound('train_passes');
-				FlxG.sound.list.add(trainSound);
+				trenSound = new FlxSound().loadEmbedded(Paths.sound('train_passes'));
+				CoolUtil.precacheSound('tren_pases');
+				FlxG.sound.list.add(trenSound);
 
-				var street:BGSprite = new BGSprite('philly/street', -40, 50);
-				add(street);
+				var calle:BGSprite = new BGSprite('philly/street', -40, 50);
+				agregar (calle);
 
-			case 'limo': //Week 4
+			case 'limusina': //Semana 4
 				var skyBG:BGSprite = new BGSprite('limo/limoSunset', -120, -50, 0.1, 0.1);
-				add(skyBG);
+				agregar(cieloBG);
 
-				if(!ClientPrefs.lowQuality) {
+				if(!ClientPrefs.bajaCalidad) {
 					limoMetalPole = new BGSprite('gore/metalPole', -500, 220, 0.4, 0.4);
 					add(limoMetalPole);
 
-					bgLimo = new BGSprite('limo/bgLimo', -150, 480, 0.4, 0.4, ['background limo pink'], true);
+					bgLimo = new BGSprite('limo/bgLimo', -150, 480, 0.4, 0.4, ['fondo limusina rosa'], true);
 					add(bgLimo);
 
 					limoCorpse = new BGSprite('gore/noooooo', -500, limoMetalPole.y - 130, 0.4, 0.4, ['Henchmen on rail'], true);
-					add(limoCorpse);
+					add(limusinacadáver);
 
-					limoCorpseTwo = new BGSprite('gore/noooooo', -500, limoMetalPole.y, 0.4, 0.4, ['henchmen death'], true);
-					add(limoCorpseTwo);
+					limoCorpseTwo = new BGSprite('gore/noooooo', -500, limoMetalPole.y, 0.4, 0.4, ['muerte de secuaces'], true);
+					add(limoCadáverDos);
 
 					grpLimoDancers = new FlxTypedGroup<BackgroundDancer>();
-					add(grpLimoDancers);
+					add(grpLimoBailarines);
 
-					for (i in 0...5)
+					para (yo en 0...5)
 					{
-						var dancer:BackgroundDancer = new BackgroundDancer((370 * i) + 130, bgLimo.y - 400);
-						dancer.scrollFactor.set(0.4, 0.4);
-						grpLimoDancers.add(dancer);
+						var bailarina:BackgroundDancer = new BackgroundDancer((370 * i) + 130, bgLimo.y - 400);
+						bailarín.scrollFactor.set(0.4, 0.4);
+						grpLimoBailarines.add(bailarina);
 					}
 
 					limoLight = new BGSprite('gore/coldHeartKiller', limoMetalPole.x - 180, limoMetalPole.y - 80, 0.4, 0.4);
-					add(limoLight);
+					add(limusinaLuz);
 
 					grpLimoParticles = new FlxTypedGroup<BGSprite>();
-					add(grpLimoParticles);
+					add(grpPartículasLimo);
 
-					//PRECACHE BLOOD
-					var particle:BGSprite = new BGSprite('gore/stupidBlood', -400, -400, 0.4, 0.4, ['blood'], false);
-					particle.alpha = 0.01;
-					grpLimoParticles.add(particle);
+					// PRECACHE SANGRE
+					var partícula:BGSprite = new BGSprite('gore/stupidBlood', -400, -400, 0.4, 0.4, ['blood'], false);
+					partícula.alfa = 0.01;
+					grpLimoPartículas.add(partícula);
 					resetLimoKill();
 
-					//PRECACHE SOUND
-					CoolUtil.precacheSound('dancerdeath');
+					//SONIDO PRECACHE
+					CoolUtil.precacheSound('muerte de bailarín');
 				}
 
 				limo = new BGSprite('limo/limoDrive', -120, 550, 1, 1, ['Limo stage'], true);
 
-				fastCar = new BGSprite('limo/fastCarLol', -300, 160);
+				fastCar = new BGSprite('limusina/fastCarLol', -300, 160);
 				fastCar.active = true;
 				limoKillingState = 0;
 
-			case 'mall': //Week 5 - Cocoa, Eggnog
-				var bg:BGSprite = new BGSprite('christmas/bgWalls', -1000, -500, 0.2, 0.2);
+			case 'mall': //Semana 5 - Cacao, ponche de huevo
+				var bg:BGSprite = new BGSprite('navidad/bgWalls', -1000, -500, 0.2, 0.2);
 				bg.setGraphicSize(Std.int(bg.width * 0.8));
 				bg.updateHitbox();
-				add(bg);
+				añadir (bg);
 
-				if(!ClientPrefs.lowQuality) {
+				if(!ClientPrefs.bajaCalidad) {
 					upperBoppers = new BGSprite('christmas/upperBop', -240, -90, 0.33, 0.33, ['Upper Crowd Bob']);
 					upperBoppers.setGraphicSize(Std.int(upperBoppers.width * 0.85));
 					upperBoppers.updateHitbox();
 					add(upperBoppers);
 
-					var bgEscalator:BGSprite = new BGSprite('christmas/bgEscalator', -1100, -600, 0.3, 0.3);
+					var bgEscalator:BGSprite = new BGSprite('navidad/bgEscalator', -1100, -600, 0.3, 0.3);
 					bgEscalator.setGraphicSize(Std.int(bgEscalator.width * 0.9));
-					bgEscalator.updateHitbox();
-					add(bgEscalator);
+					bgEscalador.updateHitbox();
+					add(bgEscalera);
 				}
 
-				var tree:BGSprite = new BGSprite('christmas/christmasTree', 370, -250, 0.40, 0.40);
-				add(tree);
+				var árbol:BGSprite = new BGSprite('navidad/árbol de navidad', 370, -250, 0.40, 0.40);
+				añadir (árbol);
 
-				bottomBoppers = new BGSprite('christmas/bottomBop', -300, 140, 0.9, 0.9, ['Bottom Level Boppers Idle']);
+				bottomBoppers = new BGSprite('navidad/bottomBop', -300, 140, 0.9, 0.9, ['Boppers de nivel inferior inactivos']);
 				bottomBoppers.animation.addByPrefix('hey', 'Bottom Level Boppers HEY', 24, false);
 				bottomBoppers.setGraphicSize(Std.int(bottomBoppers.width * 1));
 				bottomBoppers.updateHitbox();
-				add(bottomBoppers);
+				add(BottomBoppers);
 
-				var fgSnow:BGSprite = new BGSprite('christmas/fgSnow', -600, 700);
-				add(fgSnow);
+				var fgSnow:BGSprite = new BGSprite('navidad/fgSnow', -600, 700);
+				add(fgNieve);
 
-				santa = new BGSprite('christmas/santa', -840, 150, 1, 1, ['santa idle in fear']);
-				add(santa);
+				santa = new BGSprite('navidad/santa', -840, 150, 1, 1, ['santa inactivo con miedo']);
+				añadir(santa);
 				CoolUtil.precacheSound('Lights_Shut_off');
 
-			case 'mallEvil': //Week 5 - Winter Horrorland
+			case 'mallEvil': //Semana 5 - Winter Horrorland
 				var bg:BGSprite = new BGSprite('christmas/evilBG', -400, -500, 0.2, 0.2);
 				bg.setGraphicSize(Std.int(bg.width * 0.8));
 				bg.updateHitbox();
-				add(bg);
+				añadir (bg);
 
-				var evilTree:BGSprite = new BGSprite('christmas/evilTree', 300, -300, 0.2, 0.2);
-				add(evilTree);
+				var evilTree:BGSprite = new BGSprite('navidad/evilTree', 300, -300, 0.2, 0.2);
+				agregar (árbol malvado);
 
-				var evilSnow:BGSprite = new BGSprite('christmas/evilSnow', -200, 700);
-				add(evilSnow);
+				var evilSnow:BGSprite = new BGSprite('navidad/evilSnow', -200, 700);
+				add(nievemalvada);
 
-			case 'school': //Week 6 - Senpai, Roses
+			case 'school': //Semana 6 - Senpai, Roses
 				GameOverSubstate.deathSoundName = 'fnf_loss_sfx-pixel';
 				GameOverSubstate.loopSoundName = 'gameOver-pixel';
 				GameOverSubstate.endSoundName = 'gameOverEnd-pixel';
 				GameOverSubstate.characterName = 'bf-pixel-dead';
 
 				var bgSky:BGSprite = new BGSprite('weeb/weebSky', 0, 0, 0.1, 0.1);
-				add(bgSky);
-				bgSky.antialiasing = false;
+				add(bgCielo);
+				bgSky.antialiasing = falso;
 
-				var repositionShit = -200;
+				var reposicionMierda = -200;
 
 				var bgSchool:BGSprite = new BGSprite('weeb/weebSchool', repositionShit, 0, 0.6, 0.90);
-				add(bgSchool);
-				bgSchool.antialiasing = false;
+				add(bgEscuela);
+				bgSchool.antialiasing = falso;
 
 				var bgStreet:BGSprite = new BGSprite('weeb/weebStreet', repositionShit, 0, 0.95, 0.95);
-				add(bgStreet);
-				bgStreet.antialiasing = false;
+				add(bgCalle);
+				bgStreet.antialiasing = falso;
 
-				var widShit = Std.int(bgSky.width * 6);
-				if(!ClientPrefs.lowQuality) {
+				var anchoMierda = Std.int(bgSky.ancho * 6);
+				if(!ClientPrefs.bajaCalidad) {
 					var fgTrees:BGSprite = new BGSprite('weeb/weebTreesBack', repositionShit + 170, 130, 0.9, 0.9);
 					fgTrees.setGraphicSize(Std.int(widShit * 0.8));
 					fgTrees.updateHitbox();
-					add(fgTrees);
-					fgTrees.antialiasing = false;
+					add(fgÁrboles);
+					fgTrees.antialiasing = falso;
 				}
 
 				var bgTrees:FlxSprite = new FlxSprite(repositionShit - 380, -800);
 				bgTrees.frames = Paths.getPackerAtlas('weeb/weebTrees');
 				bgTrees.animation.add('treeLoop', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], 12);
 				bgTrees.animation.play('treeLoop');
-				bgTrees.scrollFactor.set(0.85, 0.85);
-				add(bgTrees);
-				bgTrees.antialiasing = false;
+				bgTrees.ScrollFactor.set(0.85, 0.85);
+				add(bgÁrboles);
+				bgTrees.antialiasing = falso;
 
-				if(!ClientPrefs.lowQuality) {
+				if(!ClientPrefs.bajaCalidad) {
 					var treeLeaves:BGSprite = new BGSprite('weeb/petals', repositionShit, -40, 0.85, 0.85, ['PETALS ALL'], true);
 					treeLeaves.setGraphicSize(widShit);
-					treeLeaves.updateHitbox();
-					add(treeLeaves);
-					treeLeaves.antialiasing = false;
+					árbolHojas.updateHitbox();
+					add(árbolHojas);
+					treeLeaves.antialiasing = falso;
 				}
 
 				bgSky.setGraphicSize(widShit);
 				bgSchool.setGraphicSize(widShit);
-				bgStreet.setGraphicSize(widShit);
+				bgCalle.setGraphicSize(widShit);
 				bgTrees.setGraphicSize(Std.int(widShit * 1.4));
 
 				bgSky.updateHitbox();
 				bgSchool.updateHitbox();
-				bgStreet.updateHitbox();
+				bgCalle.updateHitbox();
 				bgTrees.updateHitbox();
 
-				if(!ClientPrefs.lowQuality) {
+				if(!ClientPrefs.bajaCalidad) {
 					bgGirls = new BackgroundGirls(-100, 190);
-					bgGirls.scrollFactor.set(0.9, 0.9);
+					bgChicas.ScrollFactor.set(0.9, 0.9);
 
 					bgGirls.setGraphicSize(Std.int(bgGirls.width * daPixelZoom));
-					bgGirls.updateHitbox();
-					add(bgGirls);
+					bgChicas.updateHitbox();
+					add(bgChicas);
 				}
 
-			case 'schoolEvil': //Week 6 - Thorns
+			case 'schoolEvil': //Semana 6 - Espinas
 				GameOverSubstate.deathSoundName = 'fnf_loss_sfx-pixel';
 				GameOverSubstate.loopSoundName = 'gameOver-pixel';
 				GameOverSubstate.endSoundName = 'gameOverEnd-pixel';
 				GameOverSubstate.characterName = 'bf-pixel-dead';
 
-				/*if(!ClientPrefs.lowQuality) { //Does this even do something?
+				/*if(!ClientPrefs.lowQuality) { //¿Esto siquiera hace algo?
 					var waveEffectBG = new FlxWaveEffect(FlxWaveMode.ALL, 2, -1, 3, 2);
 					var waveEffectFG = new FlxWaveEffect(FlxWaveMode.ALL, 2, -1, 5, 2);
 				}*/
 
-				var posX = 400;
-				var posY = 200;
-				if(!ClientPrefs.lowQuality) {
+				varposX = 400;
+				varposY = 200;
+				if(!ClientPrefs.bajaCalidad) {
 					var bg:BGSprite = new BGSprite('weeb/animatedEvilSchool', posX, posY, 0.8, 0.9, ['background 2'], true);
-					bg.scale.set(6, 6);
-					bg.antialiasing = false;
-					add(bg);
+					bg.escala.set(6, 6);
+					bg.antialiasing = falso;
+					añadir (bg);
 
 					bgGhouls = new BGSprite('weeb/bgGhouls', -100, 190, 0.9, 0.9, ['BG freaks glitch instance'], false);
 					bgGhouls.setGraphicSize(Std.int(bgGhouls.width * daPixelZoom));
@@ -633,144 +633,144 @@ class PlayState extends MusicBeatState
 					bgGhouls.visible = false;
 					bgGhouls.antialiasing = false;
 					add(bgGhouls);
-				} else {
+				} demás {
 					var bg:BGSprite = new BGSprite('weeb/animatedEvilSchool_low', posX, posY, 0.8, 0.9);
-					bg.scale.set(6, 6);
-					bg.antialiasing = false;
-					add(bg);
+					bg.escala.set(6, 6);
+					bg.antialiasing = falso;
+					añadir (bg);
 				}
 		}
 
-		if(isPixelStage) {
-			introSoundsSuffix = '-pixel';
+		si (es un escenario de píxel) {
+			introSoundsSuffix = '-píxel';
 		}
 
-		add(gfGroup);
+		add(gfGrupo);
 
-		// Shitty layering but whatev it works LOL
-		if (curStage == 'limo')
-			add(limo);
+		// Capas de mierda, pero lo que sea que funcione LOL
+		if (curStage == 'limusina')
+			agregar (limusina);
 
-		add(dadGroup);
-		add(boyfriendGroup);
+		add(grupopadres);
+		add(grupo de novios);
 		
-		if(curStage == 'spooky') {
-			add(halloweenWhite);
+		if(curStage == 'espeluznante') {
+			add(halloweenBlanco);
 		}
 
 		luaDebugGroup = new FlxTypedGroup<DebugLuaText>();
 		luaDebugGroup.cameras = [camOther];
 		add(luaDebugGroup);
 
-        var doPush:Bool = false;
+        var doPush:Bool = falso;
 
-		var doPush:Bool = false;
-		var luaFile:String = 'stages/' + curStage + '.lua';
+		var doPush:Bool = falso;
+		var luaFile:String = 'etapas/' + curStage + '.lua';
 		luaFile = Paths.getPreloadPath(luaFile);
 		if(OpenFlAssets.exists(luaFile)) {
-			doPush = true;
+			doEmpujar = verdadero;
 		}
 
 		if(curStage == 'philly') {
 			phillyCityLightsEvent = new FlxTypedGroup<BGSprite>();
-			for (i in 0...5)
+			para (yo en 0...5)
 			{
 				var light:BGSprite = new BGSprite('philly/win' + i, -10, 0, 0.3, 0.3);
-				light.visible = false;
+				luz.visible = falso;
 				light.setGraphicSize(Std.int(light.width * 0.85));
-				light.updateHitbox();
-				phillyCityLightsEvent.add(light);
+				luz.actualizarHitbox();
+				phillyCityLightsEvent.add(luz);
 			}
 		}
 		
-		if(doPush) 
-			luaArray.push(new FunkinLua(Asset2File.getPath(luaFile)));
+		si (empujar) 
+			luaArray.push(nuevo FunkinLua(Asset2File.getPath(luaFile)));
 
-		if(!modchartSprites.exists('blammedLightsBlack')) { //Creates blammed light black fade in case you didn't make your own
+		if(!modchartSprites.exists('blammedLightsBlack')) { //Crea un desvanecimiento de luz negra en caso de que no hayas hecho el tuyo propio
 			blammedLightsBlack = new ModchartSprite(FlxG.width * -0.5, FlxG.height * -0.5);
 			blammedLightsBlack.makeGraphic(Std.int(FlxG.width * 2), Std.int(FlxG.height * 2), FlxColor.BLACK);
-			var position:Int = members.indexOf(gfGroup);
-			if(members.indexOf(boyfriendGroup) < position) {
-				position = members.indexOf(boyfriendGroup);
-			} else if(members.indexOf(dadGroup) < position) {
-				position = members.indexOf(dadGroup);
+			var position:Int = miembros.indexOf(gfGroup);
+			if(members.indexOf(boyfriendGroup) < posición) {
+				posición = miembros.indexOf(boyfriendGroup);
+			} else if(members.indexOf(dadGroup) < posición) {
+				posición = miembros.indexOf(dadGroup);
 			}
-			insert(position, blammedLightsBlack);
+			insertar (posición, BlammedLightsBlack);
 
-			blammedLightsBlack.wasAdded = true;
-			modchartSprites.set('blammedLightsBlack', blammedLightsBlack);
+			blammedLightsBlack.wasAdded = verdadero;
+			modchartSprites.set('Luces Negras culpables', Luces Negras culpables);
 		}
 		if(curStage == 'philly') insert(members.indexOf(blammedLightsBlack) + 1, phillyCityLightsEvent);
-		blammedLightsBlack = modchartSprites.get('blammedLightsBlack');
-		blammedLightsBlack.alpha = 0.0;
+		BlammedLightsBlack = modchartSprites.get('blammedLightsBlack');
+		BlammedLightsBlack.alpha = 0.0;
 
-		var gfVersion:String = SONG.player3;
+		var gfVersion:String = CANCIÓN.jugador3;
 		if(gfVersion == null || gfVersion.length < 1) {
-			switch (curStage)
+			cambiar (curStage)
 			{
-				case 'limo':
-					gfVersion = 'gf-car';
-				case 'mall' | 'mallEvil':
-					gfVersion = 'gf-christmas';
-				case 'school' | 'schoolEvil':
-					gfVersion = 'gf-pixel';
-				default:
-					gfVersion = 'gf';
+				caso 'limusina':
+					gfVersion = 'gf-coche';
+				caso 'centro comercial' | 'mallEvil':
+					gfVersion = 'gf-navidad';
+				caso 'escuela' | 'schoolEvil':
+					gfVersion = 'gf-píxel';
+				defecto:
+					versióngf = 'gf';
 			}
-			SONG.player3 = gfVersion; //Fix for the Chart Editor
+			CANCIÓN.player3 = gfVersion; // Corrección para el editor de gráficos
 		}
 
-		gf = new Character(0, 0, gfVersion);
+		gf = nuevo personaje (0, 0, gfVersion);
 		startCharacterPos(gf);
 		gf.scrollFactor.set(0.95, 0.95);
-		gfGroup.add(gf);
+		gfGrupo.add(gf);
 
-		dad = new Character(0, 0, SONG.player2);
-		startCharacterPos(dad, true);
-		dadGroup.add(dad);
+		papa = nuevo Personaje(0, 0, CANCION.jugador2);
+		startCharacterPos(papá, verdadero);
+		dadGroup.add(papá);
 
-		boyfriend = new Boyfriend(0, 0, SONG.player1);
-		startCharacterPos(boyfriend);
-		boyfriendGroup.add(boyfriend);
+		novio = nuevo novio(0, 0, CANCION.jugador1);
+		startCharacterPos(novio);
+		novioGroup.add(novio);
 		
 		var camPos:FlxPoint = new FlxPoint(gf.getGraphicMidpoint().x, gf.getGraphicMidpoint().y);
 		camPos.x += gf.cameraPosition[0];
 		camPos.y += gf.cameraPosition[1];
 
 		if(dad.curCharacter.startsWith('gf')) {
-			dad.setPosition(GF_X, GF_Y);
-			gf.visible = false;
+			papá.establecerPosición(GF_X, GF_Y);
+			gf.visible = falso;
 		}
 
-		switch(curStage)
+		cambiar (escenario actual)
 		{
-			case 'limo':
+			caso 'limusina':
 				resetFastCar();
 				insert(members.indexOf(gfGroup) - 1, fastCar);
 			
-			case 'schoolEvil':
-				var evilTrail = new FlxTrail(dad, null, 4, 24, 0.3, 0.069); //nice
+			caso 'schoolEvil':
+				var evilTrail = new FlxTrail(dad, null, 4, 24, 0.3, 0.069); //bonito
 				insert(members.indexOf(dadGroup) - 1, evilTrail);
 		}
 
-		var file:String = Paths.json(songName + '/dialogue'); //Checks for json/Psych Engine dialogue
-		if (OpenFlAssets.exists(file)) {
-			dialogueJson = DialogueBoxPsych.parseDialogue(file);
+		var file:String = Paths.json(songName + '/dialogue'); // Comprueba el diálogo json/Psych Engine
+		if (OpenFlAssets.exists(archivo)) {
+			dialogJson = DialogueBoxPsych.parseDialogue(archivo);
 		}
 
-		var file:String = Paths.txt(songName + '/' + songName + 'Dialogue'); //Checks for vanilla/Senpai dialogue
-		if (OpenFlAssets.exists(file)) {
-			dialogue = CoolUtil.coolTextFile(file);
+		var file:String = Paths.txt(songName + '/' + songName + 'Diálogo'); //Comprueba el diálogo vainilla/senpai
+		if (OpenFlAssets.exists(archivo)) {
+			diálogo = CoolUtil.coolTextFile(archivo);
 		}
-		var doof:DialogueBox = new DialogueBox(false, dialogue);
+		var doof:DialogueBox = new DialogueBox(falso, diálogo);
 		// doof.x += 70;
 		// doof.y = FlxG.height * 0.5;
 		doof.scrollFactor.set();
 		doof.finishThing = startCountdown;
-		doof.nextDialogueThing = startNextDialogue;
+		doof.nextDialogueThing = iniciarSiguienteDiálogo;
 		doof.skipDialogueThing = skipDialogue;
 
-		Conductor.songPosition = -5000;
+		Director.canciónPosición = -5000;
 
 		strumLine = new FlxSprite(ClientPrefs.middleScroll ? STRUM_X_MIDDLESCROLL : STRUM_X, 50).makeGraphic(FlxG.width, 10);
 		if(ClientPrefs.downScroll) strumLine.y = FlxG.height - 150;
@@ -779,42 +779,42 @@ class PlayState extends MusicBeatState
 		timeTxt = new FlxText(STRUM_X + (FlxG.width / 2) - 248, 20, 400, "", 32);
 		timeTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		timeTxt.scrollFactor.set();
-		timeTxt.alpha = 0;
+		tiempoTxt.alfa = 0;
 		timeTxt.borderSize = 2;
 		timeTxt.visible = !ClientPrefs.hideTime;
 		if(ClientPrefs.downScroll) timeTxt.y = FlxG.height - 45;
 
 		timeBarBG = new AttachedSprite('timeBar');
-		timeBarBG.x = timeTxt.x;
+		tiempoBarBG.x = tiempoTxt.x;
 		timeBarBG.y = timeTxt.y + (timeTxt.height / 4);
 		timeBarBG.scrollFactor.set();
-		timeBarBG.alpha = 0;
+		tiempoBarBG.alfa = 0;
 		timeBarBG.visible = !ClientPrefs.hideTime;
 		timeBarBG.color = FlxColor.BLACK;
-		timeBarBG.xAdd = -4;
-		timeBarBG.yAdd = -4;
-		add(timeBarBG);
+		tiempoBarBG.xAdd = -4;
+		tiempoBarBG.yAdd = -4;
+		agregar(barrahoraBG);
 
 		timeBar = new FlxBar(timeBarBG.x + 4, timeBarBG.y + 4, LEFT_TO_RIGHT, Std.int(timeBarBG.width - 8), Std.int(timeBarBG.height - 8), this,
-			'songPercent', 0, 1);
-		timeBar.scrollFactor.set();
+			'porcentajecanción', 0, 1);
+		barra de tiempo.factor de desplazamiento.set();
 		timeBar.createFilledBar(0xFF000000, 0xFFFFFFFF);
-		timeBar.numDivisions = 800; //How much lag this causes?? Should i tone it down to idk, 400 or 200?
-		timeBar.alpha = 0;
+		barratiempo.numDivisiones = 800; //¿Cuánto retraso causa esto? ¿Debería bajar el tono a idk, 400 o 200?
+		barratiempo.alfa = 0;
 		timeBar.visible = !ClientPrefs.hideTime;
-		add(timeBar);
+		agregar (barra de tiempo);
 		add(timeTxt);
 		timeBarBG.sprTracker = timeBar;
 
 		strumLineNotes = new FlxTypedGroup<StrumNote>();
-		add(strumLineNotes);
-		add(grpNoteSplashes);
+		add(strumLineNotas);
+		add(grpNotasSplashes);
 
 		var splash:NoteSplash = new NoteSplash(100, 100, 0);
-		grpNoteSplashes.add(splash);
-		splash.alpha = 0.0;
+		grpNotasSplashes.add(salpicadura);
+		salpicadura.alfa = 0.0;
 
-		opponentStrums = new FlxTypedGroup<StrumNote>();
+		oponenteStrums = new FlxTypedGroup<StrumNote>();
 		playerStrums = new FlxTypedGroup<StrumNote>();
 
 		// startCountdown();
@@ -900,7 +900,15 @@ class PlayState extends MusicBeatState
 		iconP2.visible = !ClientPrefs.hideHud;
 		add(iconP2);
 		reloadHealthBarColors();
-
+       
+        var creditTxt:FlxText = new FlxText(4,healthBarBG.y + 20,0,("Port by Luis "), 24);
+        creditTxt.scrollFactor.set();
+        creditTxt.setFormat("VCR OSD Mono", 24, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+        creditTxt.borderColor = FlxColor.BLACK;
+        creditTxt.borderSize = 3;
+        creditTxt.borderStyle = FlxTextBorderStyle.OUTLINE;
+        add(creditTxt);
+      
 		scoreTxt = new FlxText(0, healthBarBG.y + 36, FlxG.width, "", 20);
 		scoreTxt.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		scoreTxt.scrollFactor.set();
